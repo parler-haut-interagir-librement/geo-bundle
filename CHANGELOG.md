@@ -4,6 +4,31 @@ All notable changes to `phil/geo-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## 0.1.1-alpha - 2026-11-25
+
+### Added
+
+- `phil_geo.http`: `client`, the HTTP client of the geocoders, of ipstack and of the MaxMind updater (`http_client` by
+  default), `timeout` (3 seconds) and `max_duration` (5 seconds), handed to each adapter as its `Timeouts`;
+  `DatabaseUpdater::TIMEOUT`, 30 seconds of wait for a byte of the download. `GeocodingServices::register()` takes the
+  `http` configuration, last and optional.
+
+### Changed
+
+- A test of a directory that cannot be written is skipped when the tests run as a user who writes there anyway, such as
+  root in a container.
+- The Node tests resolve `@hotwired/stimulus` to their stub with a synchronous hook given to `module.registerHooks()`,
+  on the loading thread, instead of `module.register()`, which Node deprecates (DEP0205).
+- The development requirements ask for the latest minor of each dependency (`doctrine/orm` 3.8, `doctrine/dbal` 4.6,
+  `doctrine/doctrine-bundle` 3.4, `twig/twig` 3.31, …).
+- The development requirements take `twig/twig` 3.31.1 or later, which fixes the advisories of its sandbox published on
+  2026-11-24.
+
+### Security
+
+- The geocoders and ipstack ran on `http_client` without a timeout: a slow provider held a worker until
+  `default_socket_timeout`, 60 seconds. They take the timeouts of `phil_geo.http`.
+
 ## 0.1.0-alpha - 2026-11-11
 
 ### Added
